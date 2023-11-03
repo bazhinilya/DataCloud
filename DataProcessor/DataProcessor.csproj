@@ -14,7 +14,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\DataConverter\DataConverter.csproj" />
-    <ProjectReference Include="..\DbBinder\DbBinder.csproj" />
+    <ProjectReference Include="..\DbBinder\DbLayer.csproj" />
   </ItemGroup>
 
 </Project>

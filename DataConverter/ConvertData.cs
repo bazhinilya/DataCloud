@@ -2,7 +2,7 @@
 {
     public static class ConvertData
     {
-        public static byte[] ConvertFile(string filePath)
+        public static byte[] GetConvertFile(string filePath)
         {
             using FileStream fileStream = new(filePath, FileMode.Open);
             var arrayByte = new byte[fileStream.Length];

@@ -1,4 +1,4 @@
-﻿using DbBinder.Conext;
+﻿using DbLayer.Conext;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 
@@ -17,8 +17,8 @@ namespace DataProcessor.AppSettings
             _configurationRoot = _builder.Build();
         }
 
-        internal DbContextOptions<DbBinderContext> ConnectionOptions =>
-            new DbContextOptionsBuilder<DbBinderContext>().UseSqlServer(_configurationRoot[key: "ConnectionStrings:DefaultConnection"]).Options;
+        internal DbContextOptions<DbLayerContext> ConnectionOptions =>
+            new DbContextOptionsBuilder<DbLayerContext>().UseSqlServer(_configurationRoot[key: "ConnectionStrings:DefaultConnection"]).Options;
 
         internal string ListeningPath => _configurationRoot[key: "ListeningPath:DefaultPath"];
     }

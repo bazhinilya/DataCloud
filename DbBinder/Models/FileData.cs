@@ -1,4 +1,4 @@
-﻿namespace DbBinder.Models
+﻿namespace DbLayer.Models
 {
     public class FileData
     {
