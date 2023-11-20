@@ -14,9 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\DataConverter\DataConverter.csproj" />
     <ProjectReference Include="..\DbBinder\DbLayer.csproj" />
-    <ProjectReference Include="..\MiddleWareLogic\MiddleWareLogic.csproj" />
   </ItemGroup>
 
 </Project>

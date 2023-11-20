@@ -3,24 +3,26 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DataServer.Controllers
 {
-    [Route("api/[controller]")]
     [ApiController]
+    [Route("api/[controller]")]
     public class HomeController : ControllerBase
     {
         private readonly DbLayerContext _context;
         public HomeController(DbLayerContext context) => _context = context;
 
         [HttpGet]
-        public FileContentResult Get([FromQuery] string fileName)
+        [Route("downloadFile")]
+        public IActionResult DownloadFile([FromQuery] string fileName)
         {
              var (name, extension, data) = MiddleWareLogic.DataConvertation.GetDataFileFromDb(_context, fileName);
-            return File(data, $"application/{extension}", $"{name}.{extension}");
+            return File(data, $"application/{extension[1..]}", $"{name}{extension}");
         }
 
-        // POST api/<DataProcessor>
         [HttpPost]
-        public void Post([FromQuery] string value)
+        [Route("uploadFile")]
+        public async Task<IActionResult> UploadFile(IFormFile uploadedFile)
         {
+            return Ok(await MiddleWareLogic.DataConvertation.SetDataFileFromDb(_context, uploadedFile));
         }
 
         //// PUT api/<DataProcessor>/5
