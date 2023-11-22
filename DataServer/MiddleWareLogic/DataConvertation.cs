@@ -1,6 +1,4 @@
-﻿using DbLayer.Models;
-using Microsoft.EntityFrameworkCore;
-using System.Net;
+﻿using Microsoft.EntityFrameworkCore;
 
 namespace MiddleWareLogic
 {
@@ -8,6 +6,7 @@ namespace MiddleWareLogic
     {
         public static (string name, string extension, byte[] data) GetDataFileFromDb(DbLayer.Conext.DbLayerContext context, string fileName)
         {
+            //TODO: проблема с поиском файлов, проверить
             try
             {
                 var dataFileFromDb = context.FileDatas
@@ -22,7 +21,14 @@ namespace MiddleWareLogic
             catch (Exception ex) { throw new Exception(ex.Message); }
         }
 
-        public static async Task<string> SetDataFileFromDb(DbLayer.Conext.DbLayerContext context, IFormFile uploadedFile)
+        public static async Task<string> SetDataFileFromDb(DbLayer.Conext.DbLayerContext context, IFormFileCollection uploadedFiles)
+        {
+            foreach (var uploadedFile in uploadedFiles) 
+                await Task.Run(async () => await AddUploadedFile(context, uploadedFile));
+            return System.Net.HttpStatusCode.OK.ToString();
+        }
+
+        private static async Task AddUploadedFile(DbLayer.Conext.DbLayerContext context, IFormFile uploadedFile)
         {
             try
             {
@@ -31,13 +37,9 @@ namespace MiddleWareLogic
                 await uploadedFile.CopyToAsync(dataStream);
                 var extensionFromDb = await context.Extensions.FirstOrDefaultAsync(ex => ex.ExtensionValue == fileExtension);
                 var extensionId = extensionFromDb == null ? Guid.NewGuid() : extensionFromDb.Id;
-                if (extensionFromDb == null)
-                {
-                    await context.AddAsync(new Extension { Id = extensionId, ExtensionValue = fileExtension });
-                }
-                await context.FileDatas.AddAsync(new FileData { Id = Guid.NewGuid(), ExtensionId = extensionId, Name = uploadedFile.Name, FileDataArray = dataStream.ToArray() });
+                if (extensionFromDb == null) await context.AddAsync(new DbLayer.Models.Extension { Id = extensionId, ExtensionValue = fileExtension });
+                await context.FileDatas.AddAsync(new DbLayer.Models.FileData { Id = Guid.NewGuid(), ExtensionId = extensionId, Name = uploadedFile.FileName, FileDataArray = dataStream.ToArray() });
                 await context.SaveChangesAsync();
-                return HttpStatusCode.OK.ToString();
             }
             catch (Exception ex) { throw new Exception(ex.Message); }
         }

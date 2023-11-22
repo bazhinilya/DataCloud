@@ -1,5 +1,4 @@
-﻿using DbLayer.Conext;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 
 namespace DataServer.Controllers
 {
@@ -7,20 +6,20 @@ namespace DataServer.Controllers
     [Route("api/[controller]")]
     public class HomeController : ControllerBase
     {
-        private readonly DbLayerContext _context;
-        public HomeController(DbLayerContext context) => _context = context;
+        private readonly DbLayer.Conext.DbLayerContext _context;
+        public HomeController(DbLayer.Conext.DbLayerContext context) => _context = context;
 
         [HttpGet]
         [Route("downloadFile")]
         public IActionResult DownloadFile([FromQuery] string fileName)
         {
-             var (name, extension, data) = MiddleWareLogic.DataConvertation.GetDataFileFromDb(_context, fileName);
+            var (name, extension, data) = MiddleWareLogic.DataConvertation.GetDataFileFromDb(_context, fileName);
             return File(data, $"application/{extension[1..]}", $"{name}{extension}");
         }
 
         [HttpPost]
         [Route("uploadFile")]
-        public async Task<IActionResult> UploadFile(IFormFile uploadedFile)
+        public async Task<IActionResult> UploadFile(IFormFileCollection uploadedFile)
         {
             return Ok(await MiddleWareLogic.DataConvertation.SetDataFileFromDb(_context, uploadedFile));
         }

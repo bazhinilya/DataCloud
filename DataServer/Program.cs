@@ -1,4 +1,3 @@
-using DbLayer.Conext;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -8,7 +7,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-builder.Services.AddDbContext<DbLayerContext>(options => options.UseSqlServer(connectionString));
+builder.Services.AddDbContext<DbLayer.Conext.DbLayerContext>(options => options.UseSqlServer(connectionString), ServiceLifetime.Transient);
 
 var app = builder.Build();
 
